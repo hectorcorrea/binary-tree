@@ -10,5 +10,6 @@ puts "error" if tree.height != 1
 puts "Height: #{tree.height}"
 puts "Done"
 
+puts "working version"
 
 
