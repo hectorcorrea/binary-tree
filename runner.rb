@@ -1,15 +1,13 @@
 require "binarytree.rb"
 
 tree = BinaryTree.new(40)
-puts "error" if tree.height != 1
+tree.add(30)
+tree.add(100)
+tree.add(20)
+tree.add(35)
+tree.add(25)
+tree.add(34)
 
-#tree.add(30)
-#tree.add(60)
-#tree.add(20)
-
-puts "Height: #{tree.height}"
+puts "Tree nodes: #{tree.walk}"
+puts "Tree height: #{tree.height}"
 puts "Done"
-
-puts "working version"
-
-
