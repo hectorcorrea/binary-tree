@@ -87,12 +87,6 @@ def test_empty_tree_after_delete
 	assert_equal(true, tree.is_empty?)
 end
 
-def xtest_to_dos
-	# see http://en.wikipedia.org/wiki/Binary_tree
-	flunk("implement other tree and node operations like depth, order, et cetera.")
-  flunk("implement enumerator concept?")
-end
-
 def test_walk_pre_order
 	tree = BinaryTree.new(40)
 	tree.add(30)
