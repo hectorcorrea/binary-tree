@@ -1,4 +1,5 @@
 class BinaryTree
+  include Enumerable
 
 	attr_accessor :root, :total_nodes
 
@@ -10,6 +11,7 @@ class BinaryTree
 			@root = Node.new(first_value)
 			@total_nodes = 1
 		end
+		@a = []
 	end
 	
 	#
@@ -18,7 +20,7 @@ class BinaryTree
 	def add(new_value)
 	
 	  if @root == nil
-			@root = Node.new(first_value)
+			@root = Node.new(new_value)
 			@total_nodes = 1
 		else
 			current = @root
@@ -214,13 +216,56 @@ class BinaryTree
 		return parent			
 	end	
 	
+  def each
+    #fill_array()
+    #@a.each { |n| yield n}
+    yield_from_node(@root)
+    #yield "4"
+    #yield "5"
+
+    b = []
+    while(true)
+      if node.left != nil
+        b << node
+        node = node.left        
+      else
+        yield node.value
+        b.pops
+        
+      end 
+      
+      # I am trying to implement "each" without 
+      # having to dump all the tree nodes into 
+      # an array.
+      #
+      # Before continuing on this I should try
+      # to implement a non-recursive walk method
+      # so that we can plug in the yield in the 
+      # midde. The problem with the recursive 
+      # implementation is that I don't know how 
+      # to pass the code_block for the yield call.
+      #
+            
+    end
+    
+    if node.left != nil
+      yield_from_node(node.left) 
+    end
+
+    yield node.value
+
+    if node.right != nil
+      yield_from_node(node.right) 
+    end
+  end
+    
 	#
 	# Walks the tree in order and returns a comma delimited string with the values
 	#
 	def walk
 		walk_in_order
 	end
-	
+  
 	def walk_in_order
 	  return "" if @root == nil
 		values = walk_in_order_from_node(@root)
@@ -235,6 +280,48 @@ class BinaryTree
 		return "" if @root == nil
 		values = walk_post_order_from_node(@root)
 	end
+	
+	def walk2
+
+	  value = ""
+	  node = @root
+	  stack = []
+	  ignore_left = false
+	  value = ""
+	  
+	  while(true)
+
+      #p "processing #{node.value.to_s}"
+      if ignore_left
+        #p "ignoring left"
+        ignore_left = false
+      else	      
+        if node.left != nil
+          #p "moving left"
+          stack << node
+          node = node.left
+          next
+        end
+      end
+      
+      value += node.value.to_s + ","
+      
+      if node.right != nil
+          #p "moving right"
+          node = node.right
+          next
+      end
+      
+      break if stack.length == 0
+      
+      #p "popping from stack"
+      node = stack.pop
+      ignore_left = true
+    end
+
+    value.chop()
+	end
+	
 	
 	private
 	
@@ -279,17 +366,48 @@ class BinaryTree
 	#   Print the root
 	# Reference: http://staff.unak.is/not/yuan/Algorithms%20and%20Data%20Structures/ALG0183-Fall%202007/Week7/7.1/Week%207%20Binary%20Search%20Trees%20(I).pdf
 	def walk_post_order_from_node(node)
-		value = ""
+	  value = ""
 		if node.left != nil
 			value = walk_post_order_from_node(node.left) + ", "
 		end
-				
+
 		if node.right != nil
 			value += walk_post_order_from_node(node.right) + ", "
 		end
-		
+
 		value	+= node.value.to_s
-	end
+  end
+  
+  # Fills an internal array with the values (in order) 
+  # in the tree
+  def fill_array
+ 	  @a = []
+ 	  fill_array_from_node(@root)
+  end
+
+  def fill_array_from_node(node)
+    if node.left != nil
+			fill_array_from_node(node.left) 
+		end
+		
+		@a << node.value
+		
+		if node.right != nil
+			fill_array_from_node(node.right) 
+		end
+  end
+  
+  def yield_from_node(node, &code_block)
+    if node.left != nil
+			yield_from_node(node.left) 
+		end
+		
+		yield node.value
+		
+		if node.right != nil
+			yield_from_node(node.right) 
+		end
+  end  
 	
 	# Internal class to represent nodes in the tree
 	class Node
