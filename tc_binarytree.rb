@@ -22,30 +22,30 @@ class TestBinaryTree < Test::Unit::TestCase
 	
 	def test_find_on_empty_tree
 		tree = BinaryTree.new
-		node = tree.find(3)
+		node = tree.find {|v| v.value == 3}
 		assert_equal(nil, node)
 	end
 	
 	def test_found
 		tree = BinaryTree.new(3)
-		node = tree.find(3)
+		node = tree.find {|n| n.value == 3}
 		assert_equal(3, node.value)
 	end
 	
 	def test_not_found
 		tree = BinaryTree.new(3)
-		node = tree.find(0)
+		node = tree.find { |n| n.value == 0}
 		assert_equal(nil, node)
 	end
 	
 	def test_walk_empty_tree
 		tree = BinaryTree.new
-		assert_equal("", tree.walk)
+		assert_equal(0, tree.collect.length)
 	end
 	
 	def test_walk_one_node
 		tree = BinaryTree.new(99)
-		assert_equal("99", tree.walk)
+		assert_equal("99", tree.to_s)
 	end
 
 	def test_walk_numbers
@@ -63,8 +63,8 @@ class TestBinaryTree < Test::Unit::TestCase
 		tree.add(25)
 		tree.add(150)
 		tree.add(125)
-		tree.add(55)	
-		assert_equal("1, 20, 25, 25.6, 25.7, 30, 35, 40, 55, 99, 100, 100, 101, 125, 150", tree.walk)
+		tree.add(55)
+		assert_equal("1, 20, 25, 25.6, 25.7, 30, 35, 40, 55, 99, 100, 100, 101, 125, 150", tree.to_s)
 	end
 	
 	def test_walk_strings
@@ -76,7 +76,7 @@ class TestBinaryTree < Test::Unit::TestCase
 		tree.add("THE")
 		tree.add("LAZY")
 		tree.add("DOG")	
-		assert_equal("BROWN, DOG, FOX, JUMPS, LAZY, QUICK, THE, THE", tree.walk)
+    assert_equal("BROWN, DOG, FOX, JUMPS, LAZY, QUICK, THE, THE", tree.to_s)
 	end
 	
 	def test_find_min_and_max
@@ -87,15 +87,24 @@ class TestBinaryTree < Test::Unit::TestCase
 		tree.add(35)
 		tree.add(25)
 		tree.add(34)
-		assert_equal(20, tree.find_min.value)
-		assert_equal(100, tree.find_max.value)
-		
-		start_node = tree.find(30)
-		assert_equal(30, start_node.value)		
-		assert_equal(20, tree.find_min(start_node).value)
-		assert_equal(35, tree.find_max(start_node).value)		
+		assert_equal(20, tree.min.value)
+		assert_equal(100, tree.max.value)
 	end	
 	
-
+	def test_find_min_and_max_from_node
+		tree = BinaryTree.new(40)
+		tree.add(30)
+		tree.add(50)
+		tree.add(45)
+		tree.add(100)
+		tree.add(20)
+		tree.add(35)
+		tree.add(25)
+		tree.add(34)
+		start_node = tree.find { |n| n.value == 50}
+		assert_equal(50, start_node.value)		
+		assert_equal(45, tree.find_min_from_node(start_node).value)
+		assert_equal(100, tree.find_max_from_node(start_node).value)			 
+	end
 		
 end

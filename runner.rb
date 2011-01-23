@@ -8,6 +8,6 @@ tree.add(35)
 tree.add(25)
 tree.add(34)
 
-puts "Tree nodes: #{tree.walk}"
+puts "Tree nodes: #{tree.to_s}"
 puts "Tree height: #{tree.height}"
 puts "Done"

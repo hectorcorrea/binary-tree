@@ -7,11 +7,11 @@ def test_delete_leaf_node
 	tree = setup_tree_for_delete()
 	total_nodes = tree.total_nodes
 	tree.delete(25)
-	assert_equal("20, 30, 34, 35, 40, 100", tree.walk)		
+	assert_equal("20, 30, 34, 35, 40, 100", tree.to_s)		
 	tree.delete(34)
-	assert_equal("20, 30, 35, 40, 100", tree.walk)		
+	assert_equal("20, 30, 35, 40, 100", tree.to_s)		
 	tree.delete(35)
-	assert_equal("20, 30, 40, 100", tree.walk)
+	assert_equal("20, 30, 40, 100", tree.to_s)
 	assert_equal(total_nodes-3, tree.total_nodes)		
 end
 
@@ -19,9 +19,9 @@ def test_delete_single_child_node
 	tree = setup_tree_for_delete()
 	total_nodes = tree.total_nodes
 	tree.delete(20)
-	assert_equal("25, 30, 34, 35, 40, 100", tree.walk)		
+	assert_equal("25, 30, 34, 35, 40, 100", tree.to_s)		
 	tree.delete(35)
-	assert_equal("25, 30, 34, 40, 100", tree.walk)
+	assert_equal("25, 30, 34, 40, 100", tree.to_s)
 	assert_equal(total_nodes-2, tree.total_nodes)	  		
 end
 
@@ -29,7 +29,7 @@ def test_delete_two_children_node
 	tree = setup_tree_for_delete()
 	total_nodes = tree.total_nodes
 	tree.delete(30)
-	assert_equal("20, 25, 34, 35, 40, 100", tree.walk)		
+	assert_equal("20, 25, 34, 35, 40, 100", tree.to_s)		
 	assert_equal(total_nodes-1, tree.total_nodes)
 end
 
@@ -91,12 +91,12 @@ def test_walk_pre_order
 	tree = BinaryTree.new(40)
 	tree.add(30)
 	tree.add(100)
-	assert_equal("40, 30, 100", tree.walk_pre_order)
+	assert_equal("40, 30, 100", tree.to_s_pre_order)
 	tree.add(25)
 	tree.add(35)
 	tree.add(60)
 	tree.add(110)
-	assert_equal("40, 30, 25, 35, 100, 60, 110", tree.walk_pre_order)		
+	assert_equal("40, 30, 25, 35, 100, 60, 110", tree.to_s_pre_order)		
 end
 
 def test_walk_post_order
@@ -107,7 +107,7 @@ def test_walk_post_order
 	tree.add(35)
 	tree.add(60)
 	tree.add(110)
-	assert_equal("25, 35, 30, 60, 110, 100, 40", tree.walk_post_order)		
+	assert_equal("25, 35, 30, 60, 110, 100, 40", tree.to_s_post_order)		
 end
 
 def setup_tree_for_delete

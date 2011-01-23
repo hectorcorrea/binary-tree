@@ -1,8 +1,11 @@
+# A class to represent a binary tree
 class BinaryTree
   include Enumerable
 
 	attr_accessor :root, :total_nodes
 
+  # Creates a new tree and optionally initializes it with a node 
+  # with the _value_ indicated.
 	def initialize(first_value = nil)
 		if first_value == nil
 			@root = nil
@@ -11,50 +14,114 @@ class BinaryTree
 			@root = Node.new(first_value)
 			@total_nodes = 1
 		end
-		@a = []
 	end
 	
-	#
-	# Adds a new value to the tree
-	#
-	def add(new_value)
-	
-	  if @root == nil
-			@root = Node.new(new_value)
-			@total_nodes = 1
+	# Adds a new node to the tree with the _value_ indicated
+  def add(new_value)
+
+    if @root == nil
+      @root = Node.new(new_value)
+      @total_nodes = 1
+      return
+    end
+
+    current = @root
+    while(true)
+      if new_value >= current.value
+        if current.right == nil
+          current.right = Node.new(new_value)
+          break
+        else
+          current = current.right
+        end
+      else
+        if current.left == nil
+          current.left = Node.new(new_value)
+          break
+        else
+          current = current.left
+        end
+      end
+    end
+
+    @total_nodes += 1
+  end
+
+	# Deletes the first node on the tree with the specified _value_.
+	def delete(value)
+		node = find {|n| n.value == value}
+		return if node == nil
+		if is_root?(node)
+			delete_root()
 		else
-			current = @root
-			while(true)
-				if new_value >= current.value
-					if current.right == nil
-						current.right = Node.new(new_value)
-						break
-					else
-						current = current.right
-					end
-				else
-					if current.left == nil
-						current.left = Node.new(new_value)
-						break
-					else
-						current = current.left
-					end
-				end
-			end
+			delete_node(node)
 		end
-		
-		@total_nodes += 1
-		
+	end
+
+  def each
+    return nil if @root == nil
+    node = @root
+    stack = []
+    ignore_left = false
+
+    while(true)
+
+      #p "processing #{node.value.to_s}"
+      if ignore_left
+        #p "ignoring left"
+        ignore_left = false
+      else	      
+        if node.left != nil
+          #p "moving left"
+          stack << node
+          node = node.left
+          next
+        end
+      end
+
+      yield node
+
+      if node.right != nil
+        #p "moving right"
+        node = node.right
+        next
+      end
+
+      break if stack.length == 0
+
+      #p "popping from stack"
+      node = stack.pop
+      ignore_left = true
+    end
+
+  end
+  
+	# Finds the _node_ with the maximum value from the specified _start_node_.
+	def find_max_from_node(start_node)
+		current = start_node
+		while(current != nil)
+			break if current.right == nil
+			current = current.right
+		end
+		return current	
+	end
+  
+  # Finds the _node_ with the minimum value from the specified _start_node_.
+	def find_min_from_node(start_node)
+		current = start_node 	
+		while(current != nil)
+			break if current.left == nil
+			current = current.left
+		end
+		return current	
 	end
 	
-	def is_empty?
-		@total_nodes == 0
-	end
-	
+	# Returns the height of the tree
 	def height()
     height_node(@root, 0)
   end
   
+  # Returns the height of a node
   def height_node(node, height)
     heightLeft = 0
     heightRight = 0 
@@ -69,54 +136,39 @@ class BinaryTree
 
     [heightLeft, heightRight, height].max 
   end
-  
-	# 
-	# Looks for a value in the tree and returns the node that was found
-	# 
-	def find(value)
+
+  # Returns true if the tree is empty
+	def is_empty?
+		@total_nodes == 0
+	end
 	
-		current = @root
-		while(current != nil)
-			break if current.value == value
-			
-			if value > current.value 
-				current = current.right
-			else
-				current = current.left
-			end
-			
-			break if current == nil
-		end
+  # Returns a comma delimited string with the values on the tree in order.
+	def to_s
+	  return "" if @root == nil
+	  a = collect {|n| n.value.to_s}
+	  a.join(", ")
+  end
 		
-		return current	
-	end
-	
-	def find_min(start_node = nil)
-		current = start_node != nil ? start_node : @root
-				
-		while(current != nil)
-			break if current.left == nil
-			current = current.left
-		end
+	# Returns a comma delimited string with the values on the in "pre order"
+  def to_s_pre_order
+    return "" if @root == nil
+    values = walk_pre_order_from_node(@root)
+  end
 
-		return current	
-	end
-	
-	def find_max(start_node = nil)
+	# Returns a comma delimited string with the values on the in "post order"
+  def to_s_post_order
+    return "" if @root == nil
+    values = walk_post_order_from_node(@root)
+  end
 
-		current = start_node != nil ? start_node : @root 
+	# =====================================================================
+	private
 
-		while(current != nil)
-			break if current.right == nil
-			current = current.right
-		end
-
-		return current	
-	end
-	
-	# Algorithm taken from
-	# http://www.algolist.net/Data_structures/Binary_search_tree/Removal
+	# Deletes the specified _node_ from the tree.
 	def delete_node(node)
+
+  	# Algorithm taken from
+  	# http://www.algolist.net/Data_structures/Binary_search_tree/Removal
 	
 		parent = find_parent_node(node)
 		is_left_node = node.value < parent.value
@@ -148,13 +200,14 @@ class BinaryTree
 		# case 3 - node has two children
 		# Do not decrease total number of nodes here 
 		# as the actual delete happens in the recursive call.
-		min_node_to_the_right = find_min(node.right)
+		min_node_to_the_right = find_min_from_node(node.right)
 		min_value_to_the_right = min_node_to_the_right.value
 		delete_node(min_node_to_the_right)
 		node.value = min_value_to_the_right		
 	end
 	
-	def delete_root()
+  # Deletes the root node of the tree.
+  def delete_root()
 		
 		if (@root.is_leaf?)
 			@root = nil
@@ -174,37 +227,31 @@ class BinaryTree
 		
 		# Use the same approach as when deleting a node with two
 		# children.
-		min_node_to_the_right = find_min(@root.right)
+		min_node_to_the_right = find_min_from_node(@root.right)
 		min_value_to_the_right = min_node_to_the_right.value
 		delete_node(min_node_to_the_right)
 		@root.value = min_value_to_the_right	
 	end
-	
-	def delete(value)
-		node = find(value)
-		return if node == nil
-		if is_root(node)
-			delete_root()
-		else
-			delete_node(node)
-		end
-	end
-	
-	def is_root(node)
-		return @root == node 
-	end
-	
+
+  # Returns the parent node for the indicated _node_.
+  # Returns nil if the indicated _node_ is the root of the tree.
+  # Raises ArgumentException if the indicated _node_ does not exist on the tree. 
 	def find_parent_node(node)
 	
 		#no parent for root node
-		return nil if @root.object_id == node.object_id 
+		return nil if is_root?(node) 
 		
 		current = @root
 		parent = nil
+		node_found = false
 		
 		while(current != nil)
-		
-			break if current.object_id == node.object_id
+		  
+		  if current.object_id == node.object_id
+		    node_found = true
+		    break
+      end
+		  
 			parent = current
 			if node.value > current.value
 				current = current.right
@@ -213,132 +260,14 @@ class BinaryTree
 			end
 		end
 		
+		raise ArgumentError, "Node indicated could not be found." if node_found == false
+		
 		return parent			
 	end	
 	
-  def each
-    #fill_array()
-    #@a.each { |n| yield n}
-    yield_from_node(@root)
-    #yield "4"
-    #yield "5"
-
-    b = []
-    while(true)
-      if node.left != nil
-        b << node
-        node = node.left        
-      else
-        yield node.value
-        b.pops
-        
-      end 
-      
-      # I am trying to implement "each" without 
-      # having to dump all the tree nodes into 
-      # an array.
-      #
-      # Before continuing on this I should try
-      # to implement a non-recursive walk method
-      # so that we can plug in the yield in the 
-      # midde. The problem with the recursive 
-      # implementation is that I don't know how 
-      # to pass the code_block for the yield call.
-      #
-            
-    end
-    
-    if node.left != nil
-      yield_from_node(node.left) 
-    end
-
-    yield node.value
-
-    if node.right != nil
-      yield_from_node(node.right) 
-    end
-  end
-    
-	#
-	# Walks the tree in order and returns a comma delimited string with the values
-	#
-	def walk
-		walk_in_order
-	end
-  
-	def walk_in_order
-	  return "" if @root == nil
-		values = walk_in_order_from_node(@root)
-	end
-	
-	def walk_pre_order
-	  return "" if @root == nil
-		values = walk_pre_order_from_node(@root)
-	end
-	
-	def walk_post_order
-		return "" if @root == nil
-		values = walk_post_order_from_node(@root)
-	end
-	
-	def walk2
-
-	  value = ""
-	  node = @root
-	  stack = []
-	  ignore_left = false
-	  value = ""
-	  
-	  while(true)
-
-      #p "processing #{node.value.to_s}"
-      if ignore_left
-        #p "ignoring left"
-        ignore_left = false
-      else	      
-        if node.left != nil
-          #p "moving left"
-          stack << node
-          node = node.left
-          next
-        end
-      end
-      
-      value += node.value.to_s + ","
-      
-      if node.right != nil
-          #p "moving right"
-          node = node.right
-          next
-      end
-      
-      break if stack.length == 0
-      
-      #p "popping from stack"
-      node = stack.pop
-      ignore_left = true
-    end
-
-    value.chop()
-	end
-	
-	
-	private
-	
-	# Walk In-Order: Left child, root, right child.
-	def walk_in_order_from_node(node)	
-		value = ""
-		if node.left != nil
-			value = walk_in_order_from_node(node.left) + ", "
-		end
-		
-		value += node.value.to_s
-		
-		if node.right != nil
-			value += ", " + walk_in_order_from_node(node.right) 
-		end
-		
-		value	
+	# Returns true if the indicated _node_ is the root of the tree.
+	def is_root?(node)
+		return @root.object_id == node.object_id
 	end
 
 	# Post order tree walk:
@@ -377,38 +306,7 @@ class BinaryTree
 
 		value	+= node.value.to_s
   end
-  
-  # Fills an internal array with the values (in order) 
-  # in the tree
-  def fill_array
- 	  @a = []
- 	  fill_array_from_node(@root)
-  end
-
-  def fill_array_from_node(node)
-    if node.left != nil
-			fill_array_from_node(node.left) 
-		end
-		
-		@a << node.value
-		
-		if node.right != nil
-			fill_array_from_node(node.right) 
-		end
-  end
-  
-  def yield_from_node(node, &code_block)
-    if node.left != nil
-			yield_from_node(node.left) 
-		end
-		
-		yield node.value
-		
-		if node.right != nil
-			yield_from_node(node.right) 
-		end
-  end  
-	
+  	
 	# Internal class to represent nodes in the tree
 	class Node
 		attr_accessor :value, :left, :right
@@ -435,6 +333,10 @@ class BinaryTree
 			@right != nil
 		end
 	
+	  def <=>(other)
+	    @value <=> other.value
+    end
+    
 	end
 
 end
