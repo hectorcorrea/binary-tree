@@ -106,5 +106,28 @@ class TestBinaryTree < Test::Unit::TestCase
 		assert_equal(45, tree.find_min_from_node(start_node).value)
 		assert_equal(100, tree.find_max_from_node(start_node).value)			 
 	end
+	
+	def test_walk_pre_order
+  	tree = BinaryTree.new(40)
+  	tree.add(30)
+  	tree.add(100)
+  	assert_equal("40, 30, 100", tree.to_s_pre_order)
+  	tree.add(25)
+  	tree.add(35)
+  	tree.add(60)
+  	tree.add(110)
+  	assert_equal("40, 30, 25, 35, 100, 60, 110", tree.to_s_pre_order)		
+  end
+
+  def test_walk_post_order
+  	tree = BinaryTree.new(40)
+  	tree.add(30)
+  	tree.add(100)
+  	tree.add(25)
+  	tree.add(35)
+  	tree.add(60)
+  	tree.add(110)
+  	assert_equal("25, 35, 30, 60, 110, 100, 40", tree.to_s_post_order)		
+  end
 		
 end

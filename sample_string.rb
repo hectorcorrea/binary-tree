@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+
+# Sample of using the binary tree class with string values
 require "binarytree.rb"
 
 tree = BinaryTree.new("HELLO")
