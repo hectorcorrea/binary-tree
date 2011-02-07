@@ -3,10 +3,10 @@
 # Sample of using the binary tree class with string values
 require "binarytree.rb"
 
-tree = BinaryTree.new("HELLO")
-tree.add("GOODBYE")
-tree.add("HOLA")
-tree.add("ADIOS")
+tree = BinaryTree.new("AAA")
+tree.add("CCC")
+tree.add("DDD")
+tree.add("BBB")
 
 puts "Tree nodes: #{tree.to_s}"
 puts "Tree height: #{tree.height}"

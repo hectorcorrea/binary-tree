@@ -1,9 +1,34 @@
-This program implements a binary tree and some of its basic operations like adding nodes, removing nodes, and walking the tree.
+This project implements a binary tree class and a class to draw the binary tree.
 
-This is my first Ruby program so very likely it does not follow Ruby's best practices or the Ruby way of doing things but it's a start.
+Class BinaryTree implements the binary tree and its basic operations (adding nodes, removing nodes, and walking the tree)
+
+Class BinaryTreeDrawer implements the code to "draw" the binary tree. This class does not draw the tree per-se but rather calculates the coordinates where each node should be drawn and calls a specified block to do the actual drawing.
+
+
+WHERE TO START
+--------------
+* sample_string.rb shows a very basic example on how to add nodes to the tree.
+
+* sample_integers.rb shows how to add nodes, remove nodes, and find nodes on the tree.
+
+* sample_people.rb shows an example on how to add nodes from a custom class the implements Comparable operations.
+
+* sample_draw_console.rb shows how to use the BinaryDrawer class. 
+
+* sample_draw_html.rb is a more complex example that generates an HTML file to draw the tree using HTML 5's canvas feature.
+
+* binarytree.rb has the binary tree implementation.
+
+* binarytreedrawer.rb has the code to draw the tree.
+
+* Files tc_*.rb are the unit tests and are another good place to start.
+
+
+COMMENTS, THOUGHTS, SUGGESTIONS?
+--------------------------------
+This is my first Ruby program so very likely it does not follow Ruby's best practices or the Ruby way of doing things but it's a start. 
 
 Feel free to comment and/or reach me if you have any questions, comments, or suggestions.
 
 Hector Correa
 hector@hectorcorrea.com 
-Jan/2011
