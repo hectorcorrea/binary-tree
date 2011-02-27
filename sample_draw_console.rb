@@ -1,5 +1,9 @@
 #!/usr/bin/env ruby
 
+# Creates a small binary tree and displays on the console 
+# the coordinates where its nodes should be drawn. This 
+# program does not draw the tree.
+
 require "binarytree"
 require "binarytreedrawer"
 

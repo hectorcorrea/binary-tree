@@ -1,18 +1,34 @@
 #!/usr/bin/env ruby
 
+# Creates a binary tree with the number of nodes indicated
+# in the command line and generates and HTML file that can
+# draw the binary tree when rendered on a browser that 
+# supports HTML 5's canvas element.
+
 require "binarytree"
 require "binarytreedrawer"
 
 totalNodes = 10
 totalNodes = ARGV[0].to_i if ARGV.count > 0
 
+
+# Generate the binary tree
 puts "Adding #{totalNodes} nodes..."
 tree = BinaryTree.new
 totalNodes.times do |x|
-  tree.add(rand(10000))
+  tree.add(rand(1_000_000))
 end
 
-puts "Calculating coordinates..."
+puts "Calculating..."
+puts "Min = #{tree.min.value}"
+puts "Max = #{tree.max.value}"
+puts "Height = #{tree.height}"
+puts "Count = #{tree.count}"
+
+# Calculate the coordiantes where the nodes should be drawn
+# and store in 3 arrays the corresponding calls to draw lines,
+# circles, and labels for each of the nodes.
+puts "Calculating coordinates for nodes..."
 minX, maxX = 0, 0
 minY, maxY = 0, 0
 circles = []
@@ -45,105 +61,34 @@ height = minY.abs + maxY.abs + 40
 centerX =  minX.abs + 20
 offsetY = 20
 
-#puts "minX=#{minX}, maxX=#{maxX}"
-#puts "width=#{width}, height=#{height}"
-#puts "centerX=#{centerX}"
 
+# Generate the HTML code to list the values in the tree
+# (only trees with 200 or less nodes) 
 puts "Generating HTML..."
 htmlList = ""
 if totalNodes > 200
-  htmlList += "<li> #{totalNodes} nodes omited</li>\r\n"
+  htmlList += "<li> #{totalNodes} nodes omitted</li>\r\n"
 else
   tree.each do |n| 
     htmlList += "<li> #{n.value} </li>\r\n"
   end
 end
 
-jsDraw = "function draw_canvas() {\r\n" + circles.join("\r\n") + lines.join("\r\n") + labels.join("\r\n") + "}\r\n"
 
-theHtmlDoc = %{
-<!DOCTYPE html>
-<html lang = "en">
-<head>
-<meta http-equiv = "Content-Type"content = "text/html; charset=utf-8" />
-<title>Binary Tree</title>
-  	<script src="modernizr-1.6.js" type="text/javascript "></script>
-</head>
-<body>
-	
-	<h1>Binary Tree</h1>
-	
-	<canvas id="theCanvas" width="#{width} " height="#{height}"></canvas>
-	
-  <script type="text/javascript">
-  if (Modernizr.canvas) {
-    var theCanvas = document.getElementById("theCanvas");
-    var theContext = theCanvas.getContext("2d");
-  } 
-  else {
-    alert("canvas not supported ")
+# Dump the individual calls to draw circles, lines, and labels
+# into a single JavaScript function.
+jsDraw = %{
+function draw_canvas() {
+  #{circles.join("\r\n\t")}
+  #{lines.join("\r\n\t")}
+  #{labels.join("\r\n\t")}
   }
-
-  var centerX = #{centerX};
-  var offsetY = #{offsetY}
-  [placeholder_js]
-
-  function draw_line(x1, y1, x2, y2) {
-    theContext.beginPath();
-    theContext.moveTo(x1, y1);
-    theContext.lineTo(x2, y2);
-    theContext.fillStyle="#000000";
-    //theContext.fill();	
-    theContext.strokeStyle= "#000000"
-    theContext.stroke();	
-  }
-  function draw_circle(x, y, radius) {
-    theContext.beginPath();
-    theContext.arc(x, y, radius, 0, Math.PI * 2, false);
-    theContext.fillStyle="#000000";
-    theContext.fill();
-    //theContext.stroke();	
-  }
-
-  function draw_blue_circle(x, y, radius) {
-    theContext.beginPath();
-    theContext.arc(x, y, radius, 0, Math.PI * 2, false);
-    theContext.fillStyle="#0000FF";
-    theContext.fill();
-    //theContext.stroke();	
-  }
-
-  function draw_label(x, y, text) {
-    theContext.font = "10px sans-serif";
-    theContext.fillText(text, x, y);
-  }
-
-  function draw_border() {
-    draw_line(0, 0, #{width}, 0);
-    draw_line(#{width}, 0, #{width}, #{height});
-    draw_line(#{width}, #{height}, 0, #{height} );
-    draw_line(0,#{height}, 0, 0);
-  }
-
-  draw_canvas();
-  draw_border();
-  </script>
-  
-  <p>Tree Properties</p>
-  <ul>
-  <li>Min value = #{tree.min.value}
-  <li>Max value = #{tree.max.value}
-  <li>Tree Height = #{tree.height}
-  </ul>
-  
-  <p>Values (in order)</p>
-	<ul>
-		[placeholder_li]
-	</ul>
-</body>
-</html>
 }
 
+
+# Generate the final HTML to draw the binary tree.
+htmlTemplate = File.read("template.html")
+theHtmlDoc = eval "%{" + htmlTemplate + "}"
 theHtmlDoc = theHtmlDoc.gsub("[placeholder_js]", jsDraw )
 theHtmlDoc = theHtmlDoc.gsub("[placeholder_li]", htmlList )
 
