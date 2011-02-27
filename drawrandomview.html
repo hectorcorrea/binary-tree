@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+	<meta http-equiv = "Content-Type"content = "text/html; charset=utf-8" />
+	<title>Binary Tree</title>
+</head>
+<body>
+
+	<h1>Binary Tree</h1>
+	
+	[placeholder_warning]
+	
+	<canvas id="theCanvas" width="#{width} " height="#{height}"></canvas>
+	<p id="noCanvas"></p>
+
+	<script type="text/javascript">
+	
+	function browser_supports_canvas() {
+	  return !!document.createElement("canvas").getContext;
+	}
+	
+	if (browser_supports_canvas()) {
+		var theCanvas = document.getElementById("theCanvas");
+		var theContext = theCanvas.getContext("2d");
+	} 
+	else {
+		alert("Binary Tree cannot be drawn in your browser.")
+	}
+
+	var centerX = #{centerX};
+	var offsetY = #{offsetY}
+	[placeholder_js]
+
+	function draw_line(x1, y1, x2, y2) {
+		theContext.beginPath();
+		theContext.moveTo(x1, y1);
+		theContext.lineTo(x2, y2);
+		theContext.fillStyle="#000000";
+		//theContext.fill();	
+		theContext.strokeStyle= "#000000"
+		theContext.stroke();	
+	}
+	function draw_circle(x, y, radius) {
+		theContext.beginPath();
+		theContext.arc(x, y, radius, 0, Math.PI * 2, false);
+		theContext.fillStyle="#000000";
+		theContext.fill();
+		//theContext.stroke();	
+	}
+
+	function draw_blue_circle(x, y, radius) {
+		theContext.beginPath();
+		theContext.arc(x, y, radius, 0, Math.PI * 2, false);
+		theContext.fillStyle="#0000FF";
+		theContext.fill();
+		//theContext.stroke();	
+	}
+
+	function draw_label(x, y, text) {
+		theContext.font = "10px sans-serif";
+		theContext.fillText(text, x, y);
+	}
+
+	function draw_border() {
+		draw_line(0, 0, #{width}, 0);
+		draw_line(#{width}, 0, #{width}, #{height});
+		draw_line(#{width}, #{height}, 0, #{height} );
+		draw_line(0,#{height}, 0, 0);
+	}
+
+	function draw_no_canvas() {
+		var noCanvas = document.getElementById('noCanvas');
+		noCanvas.innerHTML = "It seems that you browser does not support the HTML 5 Canvas element used to draw the binary tree in this page. Try using a modern browser like Chrome, FireFox, or Safari."
+	}
+	
+	if (browser_supports_canvas()) {
+		draw_canvas();
+		draw_border();
+	}
+	else {
+		draw_no_canvas();
+	}
+
+	</script>
+	
+	<p>Tree Properties</p>
+	<ul>
+		<li>Nodes: #{tree.count}</li>
+		<li>Min. value = #{tree.min.value}</li>
+		<li>Max. value = #{tree.max.value}</li>
+		<li>Tree Height = #{tree.height}</li>
+	</ul>
+
+	<p>Values (in order)</p>
+	<ul>
+		[placeholder_li]
+	</ul>
+</body>
+</html>

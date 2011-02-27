@@ -16,7 +16,7 @@ totalNodes = ARGV[0].to_i if ARGV.count > 0
 puts "Adding #{totalNodes} nodes..."
 tree = BinaryTree.new
 totalNodes.times do |x|
-  tree.add(rand(1_000_000))
+  tree.add(rand(10_000))
 end
 
 puts "Calculating..."
