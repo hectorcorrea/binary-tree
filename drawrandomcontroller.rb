@@ -3,59 +3,49 @@ require "binarytreedrawer"
 
 class DrawRandomController
 
-  attr_accessor :nodes, :tree
+  attr_accessor :nodes, :tree, :html_warning_message, :html_node_list, :javascript_draw,
+    :canvas_width, :canvas_height, :canvas_centerX, :canvas_offsetY
   
-  def initialize(request)
+  def initialize(howManyNodes)
     @max_demo_nodes = 100
-    @warning = ""
-    @nodes = validate_request(request)
-    @tree = generate_tree(@nodes)
-  end
-  
-  def get_html_view()
-    html = generate_html(@tree)
-    return html
+    @html_node_list = ""
+    @nodes = validate_request(howManyNodes.to_i)
+    generate_tree()
+    generate_html()
   end
   
   private
-  def validate_request(request)
-    nodes = 10
-    return nodes if request.path_info == ""
-    
-    parts = request.path_info.split("/")
-    if parts.length == 2
-      
-      nodes = parts[1].to_i 
-      
-      if nodes <= 0
-        @warning = "An unexpected number of nodes was requested. Defaulting to 10 nodes."
-        nodes = 10
-      end
-      
-      if nodes > @max_demo_nodes 
-        @warning = %{
-          <p><b>This demo site limits the number of nodes supported to #{@max_demo_nodes}.</b>
-          The program to draw the binary tree does support very large number of 
-          nodes (e.g. I have tested it up to 10,000 nodes). Check out the code
-          and host it on your own if you need to draw more than #{@max_demo_nodes} nodes.</p>
-        }
-        nodes = @max_demo_nodes 
-      end
-    
+  def validate_request(howManyNodes)
+    nodes = howManyNodes
+
+    @html_warning_message = ""
+
+    if nodes <= 0
+      @html_warning_message = "An unexpected number of nodes was requested. Defaulting to 10 nodes."
+      nodes = 10
     end
     
+    if nodes > @max_demo_nodes 
+      @html_warning_message = %{
+        <p><b>This demo site limits the number of nodes supported to #{@max_demo_nodes}.</b>
+        The program to draw the binary tree does support very large number of 
+        nodes (e.g. I have tested it up to 10,000 nodes). Check out the code
+        and host it on your own if you need to draw more than #{@max_demo_nodes} nodes.</p>
+      }
+      nodes = @max_demo_nodes 
+    end
+     
     return nodes
   end
   
-  def generate_tree(nodes)
-    tree = BinaryTree.new
-    nodes.times do |x|
-      tree.add(rand(1000))
+  def generate_tree()
+    @tree = BinaryTree.new
+    @nodes.times do |x|
+      @tree.add(rand(1000))
     end
-    return tree
   end
   
-  def generate_html(tree)
+  def generate_html()
 
     # Calculate the coordiantes where the nodes should be drawn
     # and store in 3 arrays the corresponding calls to draw lines,
@@ -66,7 +56,7 @@ class DrawRandomController
     lines = []
     labels = []
     first_node = true
-    drawer = BinaryTreeDrawer.new(tree)
+    drawer = BinaryTreeDrawer.new(@tree)
     drawer.draw(0,0, Proc.new { |value, x, y, px, py| 
 
       if first_node
@@ -87,40 +77,32 @@ class DrawRandomController
 
       })
 
-    width = minX.abs + maxX.abs + 80 
-    height = minY.abs + maxY.abs + 40
-    centerX =  minX.abs + 20
-    offsetY = 20
+    @canvas_width = minX.abs + maxX.abs + 80 
+    @canvas_height = minY.abs + maxY.abs + 40
+    @canvas_centerX =  minX.abs + 20
+    @canvas_offsetY = 20
 
     # Generate the HTML code to list the values in the tree
     # (only trees with 200 or less nodes) 
-    htmlList = ""
-    if tree.count > 200
-      htmlList += "<li> #{tree.count} nodes omitted</li>\r\n"
+    @html_node_list = ""
+    if @tree.count > 200
+      @html_node_list += "<li> #{tree.count} nodes omitted</li>\r\n"
     else
-      tree.each do |n| 
-        htmlList += "<li> #{n.value} </li>\r\n"
+      @tree.each do |n| 
+        @html_node_list += "<li> #{n.value} </li>\r\n"
       end
     end
 
     # Dump the individual calls to draw circles, lines, and labels
     # into a single JavaScript function.
-    jsDraw = %{
+    @javascript_draw = %{
     function draw_canvas() {
       #{circles.join("\r\n\t")}
       #{lines.join("\r\n\t")}
       #{labels.join("\r\n\t")}
       }
-    }
-
-    # Generate the final HTML to draw the binary tree.
-    htmlTemplate = File.read("drawrandomview.html")
-    htmlDoc = eval "%{" + htmlTemplate + "}"
-    htmlDoc = htmlDoc.gsub("[placeholder_warning]", @warning )
-    htmlDoc = htmlDoc.gsub("[placeholder_li]", htmlList )
-    htmlDoc = htmlDoc.gsub("[placeholder_js]", jsDraw )
+    }    
     
-    return htmlDoc
   end
    
 end

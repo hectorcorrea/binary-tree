@@ -1,6 +1,13 @@
-task :default => [:test]
+task :default => [:sinatra]
 
 task :test do
 	ruby "ts_binarytree.rb"
 end
 
+task :webrick do
+	ruby "webserver_webrick.rb"
+end
+
+task :sinatra do
+	ruby "webserver_sinatra.rb"
+end

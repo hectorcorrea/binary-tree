@@ -35,9 +35,18 @@ class HomeServlet < WEBrick::HTTPServlet::AbstractServlet
   end
 end
 
-class DrawRandomServlet < WEBrick::HTTPServlet::AbstractServlet
+class DrawRandomTreeServlet < WEBrick::HTTPServlet::AbstractServlet
   def do_GET(request, response)
     controller = DrawRandomController.new(request)
+    response.body = controller.get_html_view()
+    response.status = 200
+    response.content_type = "text/html"
+  end
+end
+
+class DrawCustomTreeServlet < WEBrick::HTTPServlet::AbstractServlet
+  def do_GET(request, response)
+    controller = DrawCustomController.new(request)
     response.body = controller.get_html_view()
     response.status = 200
     response.content_type = "text/html"
@@ -49,6 +58,7 @@ puts
 
 server = WEBrick::HTTPServer.new( :Port => 1234 )
 server.mount "/", HomeServlet
-server.mount "/random", DrawRandomServlet
+server.mount "/random", DrawRandomTreeServlet
+server.mount "/custom", DrawCustomTreeServlet
 trap("INT") { server.shutdown }
 server.start 
