@@ -7,7 +7,8 @@ class DrawRandomController
     :canvas_width, :canvas_height, :canvas_centerX, :canvas_offsetY
   
   def initialize(howManyNodes)
-    @max_demo_nodes = 100
+    @max_demo_nodes = 250
+    @max_nodes_to_list = 250
     @html_node_list = ""
     @nodes = validate_request(howManyNodes.to_i)
     generate_tree()
@@ -85,7 +86,7 @@ class DrawRandomController
     # Generate the HTML code to list the values in the tree
     # (only trees with 200 or less nodes) 
     @html_node_list = ""
-    if @tree.count > 200
+    if @tree.count > @max_nodes_to_list
       @html_node_list += "<li> #{tree.count} nodes omitted</li>\r\n"
     else
       @tree.each do |n| 

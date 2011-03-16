@@ -2,7 +2,7 @@
 
 <%= @data.warning_message %>
 
-<canvas id="theCanvas" width="#{width} " height="#{height}"></canvas>
+<canvas id="theCanvas" width="<%= @data.canvas_width %>" height="<%= @data.canvas_height %>"></canvas>
 <p id="noCanvas"></p>
 
 <script type="text/javascript">
