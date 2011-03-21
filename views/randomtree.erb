@@ -76,8 +76,17 @@ else {
 	draw_no_canvas();
 }
 
+
+function SaveImage() {
+	Canvas2Image.saveAsPNG(theCanvas);
+	//var oPng = Canvas2Image.saveAsPNG(theCanvas, true);
+	//var img = $("#imgPlaceholder");
+	//img.html(oPng);
+}
+
 </script>
 
+<p>Click <a href="" target="_blank" onclick="SaveImage(); return false;">here</a> to download image to your computer.</p>
 <p>Tree Properties</p>
 <ul>
 	<li>Nodes: <%= @data.count %></li>

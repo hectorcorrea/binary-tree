@@ -42,7 +42,7 @@ class DrawRandomController
   def generate_tree()
     @tree = BinaryTree.new
     @nodes.times do |x|
-      @tree.add(rand(1000))
+      @tree.add(rand(10000))
     end
   end
   
