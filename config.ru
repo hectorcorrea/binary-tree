@@ -1,2 +1,2 @@
-require "webserver_sinatra"
+require "web_server"
 run Sinatra::Application
