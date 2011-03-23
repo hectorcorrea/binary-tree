@@ -1,9 +1,11 @@
 #!/usr/bin/env ruby
 
-require "binarytree.rb"
-
 # Sample of using the binary tree class with a custom class that 
 # implements Comparable operations
+
+$: << File.expand_path(File.dirname(__FILE__) + "/../lib")
+require "binarytree"
+
 class Person 
   include Comparable
   

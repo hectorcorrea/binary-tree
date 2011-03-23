@@ -1,5 +1,6 @@
+$: << File.expand_path(File.dirname(__FILE__) + "/../lib")
 require "test/unit"
-require "binarytree.rb"  
+require "binarytree"  
 
 class TestBinaryTree < Test::Unit::TestCase
 

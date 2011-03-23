@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
-  
+
+$: << File.expand_path(File.dirname(__FILE__) + "/lib")
 require "rubygems"
 require "sinatra"
-require "homecontroller"
-require "drawrandomcontroller"
+require "web_drawrandomcontroller"
 
 DataClass = Struct.new(:centerX, :offsetY, 
   :canvas_width, :canvas_height, 

@@ -1,7 +1,9 @@
 #!/usr/bin/env ruby
 
 # Sample of using the binary tree class with integer values
-require "binarytree.rb"
+
+$: << File.expand_path(File.dirname(__FILE__) + "/../lib")
+require "binarytree"
 
 tree = BinaryTree.new(40)
 tree.add(30)

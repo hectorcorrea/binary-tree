@@ -2,7 +2,8 @@
 # versus the built-in array class in Ruby. The expected result
 # is that the array is faster since my binary tree is not 
 # optimized for speed. 
-require "binarytree.rb"
+
+require "binarytree"
 require "benchmark"
 #require "profile"
 

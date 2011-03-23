@@ -1,7 +1,0 @@
-require "test/unit"
-require "tc_binarytree"
-require "tc_binarytree_delete"
-require "tc_height"
-require "tc_drawer"
-require "tc_homecontroller"
-require "tc_drawrandomcontroller"

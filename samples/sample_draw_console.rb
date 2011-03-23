@@ -4,6 +4,7 @@
 # the coordinates where its nodes should be drawn. This 
 # program does not draw the tree.
 
+$: << File.expand_path(File.dirname(__FILE__) + "/../lib")
 require "binarytree"
 require "binarytreedrawer"
 
