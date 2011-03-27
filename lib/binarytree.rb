@@ -1,6 +1,5 @@
 # A class to represent a binary tree
 class BinaryTree
-  include Enumerable
 
 	attr_accessor :root, :total_nodes
 
@@ -49,7 +48,7 @@ class BinaryTree
 
 	# Deletes the first node on the tree with the specified _value_.
 	def delete(value)
-		node = find {|n| n.value == value}
+		node = search(value)
 		return if node == nil
 		if is_root?(node)
 			delete_root()
@@ -58,7 +57,24 @@ class BinaryTree
 		end
 	end
 
-  def each
+  def min
+    find_min_from_node(@root)
+  end
+ 
+  def max
+    find_max_from_node(@root)
+  end 
+  
+  def count
+    return @total_nodes
+  end
+  
+  # Processes each node in the tree in order. Yields execution on each
+  # node. For example you can use it as follows:
+  #
+  #     tree.walk { |n| puts "#{n.value}" }
+  #
+  def walk
     return nil if @root == nil
     node = @root
     stack = []
@@ -96,6 +112,23 @@ class BinaryTree
 
   end
   
+  # Performs a binary search on the tree. 
+  # Returns the node found or nil if no node was found.
+  # If a block is passed, yields execution on each node evaluated during the search.
+  def search(value)
+    node = @root
+    while(true)
+      return nil if node == nil
+      yield node if block_given?
+      return node if value == node.value 
+      if value < node.value 
+        node = node.left
+      else
+        node = node.right
+      end
+    end
+  end
+    
 	# Finds the _node_ with the maximum value from the specified _start_node_.
 	def find_max_from_node(start_node)
 		current = start_node
@@ -145,7 +178,8 @@ class BinaryTree
   # Returns a comma delimited string with the values on the tree in order.
 	def to_s
 	  return "" if @root == nil
-	  a = collect {|n| n.value.to_s}
+	  a = []
+	  walk {|n| a << n.value.to_s }
 	  a.join(", ")
   end
 		

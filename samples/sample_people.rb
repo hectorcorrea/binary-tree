@@ -17,17 +17,17 @@ class Person
   end
   
   def <=>(other)
-    @age <=> other.age
+    @name <=> other.name
   end
   
   def to_s
-    return name + "(#{age})"
+    return name
   end
     
 end
 
-john = Person.new("hector", 38)
-jane = Person.new("karla", 36)
+john = Person.new("john", 30)
+jane = Person.new("jane", 29)
 mac = Person.new("mac", 7)
 summer = Person.new("summer", 8)
 tree = BinaryTree.new
@@ -38,4 +38,18 @@ tree.add(summer)
 
 puts "Tree nodes: #{tree.to_s}"
 puts "Tree height: #{tree.height}"
-puts "Done"
+puts
+
+# Perform a binary search. The comparison will be performed as defined in 
+# the <=> operator in the Person class.
+found = tree.search( Person.new("summer", 8) )
+puts "Node found = #{found.value}"
+puts
+
+# Walk the entire tree in ascending order (the order is defined by 
+# the <=> operator in the Person class.
+puts "Who can drive?"
+tree.walk do |n|
+  puts "#{n.value.name} (#{n.value.age})" if n.value.age >= 18
+end
+

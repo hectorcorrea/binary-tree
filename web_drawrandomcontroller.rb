@@ -89,7 +89,7 @@ class DrawRandomController
     if @tree.count > @max_nodes_to_list
       @html_node_list += "<li> #{tree.count} nodes omitted</li>\r\n"
     else
-      @tree.each do |n| 
+      @tree.walk do |n| 
         @html_node_list += "<li> #{n.value} </li>\r\n"
       end
     end

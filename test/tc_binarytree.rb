@@ -21,27 +21,27 @@ class TestBinaryTree < Test::Unit::TestCase
 		assert_equal(3, tree.total_nodes)
 	end
 	
-	def test_find_on_empty_tree
+	def test_search_on_empty_tree
 		tree = BinaryTree.new
-		node = tree.find {|v| v.value == 3}
+		node = tree.search(3)
 		assert_equal(nil, node)
 	end
 	
-	def test_found
+	def test_search_found
 		tree = BinaryTree.new(3)
-		node = tree.find {|n| n.value == 3}
+		node = tree.search(3)
 		assert_equal(3, node.value)
 	end
 	
-	def test_not_found
+	def test_search_not_found
 		tree = BinaryTree.new(3)
-		node = tree.find { |n| n.value == 0}
+		node = tree.search(0)
 		assert_equal(nil, node)
 	end
 	
 	def test_walk_empty_tree
 		tree = BinaryTree.new
-		assert_equal(0, tree.collect.length)
+		assert_equal("", tree.to_s)
 	end
 	
 	def test_walk_one_node
@@ -102,7 +102,7 @@ class TestBinaryTree < Test::Unit::TestCase
 		tree.add(35)
 		tree.add(25)
 		tree.add(34)
-		start_node = tree.find { |n| n.value == 50}
+		start_node = tree.search(50)
 		assert_equal(50, start_node.value)		
 		assert_equal(45, tree.find_min_from_node(start_node).value)
 		assert_equal(100, tree.find_max_from_node(start_node).value)			 
@@ -130,5 +130,27 @@ class TestBinaryTree < Test::Unit::TestCase
   	tree.add(110)
   	assert_equal("25, 35, 30, 60, 110, 100, 40", tree.to_s_post_order)		
   end
+  
+  def test_search_path
+    tree = BinaryTree.new(40)
+  	tree.add(30)
+  	tree.add(100)
+  	tree.add(25)
+  	tree.add(35)
+  	tree.add(60)
+  	tree.add(110)
+    
+    # search value to the right of the root
+  	values = []
+  	tree.search(60) { |n| values << n.value }
+  	assert_equal("40, 100, 60", values.join(", "))
+
+    # search value to the left of the root
+  	values = []
+  	tree.search(35) { |n| values << n.value }
+  	assert_equal("40, 30, 35", values.join(", "))
+  end
+  
+  
 		
 end
