@@ -1,4 +1,4 @@
-<h1>Binary Tree</h1>
+<h1>Your Binary Tree</h1>
 
 <%= @data.warning_message %>
 
@@ -90,12 +90,15 @@ function SaveImage() {
 <p>Tree Properties</p>
 <ul>
 	<li>Nodes: <%= @data.count %></li>
-	<li>Min. value = <%= @data.min_value %></li>
-	<li>Max. value = <%= @data.max_value %></li>
+	<li>Min. value = <%= h @data.min_value %></li>
+	<li>Max. value = <%= h @data.max_value %></li>
 	<li>Tree Height = <%= @data.height %></li>
+	<%= @data.sort_message %>
 </ul>
 
 <p>Values (in order)</p>
 <ul>
-	<%= @data.list_nodes %>
+	<% @data.list_nodes.each do |value| %>
+		<li><%= h value %></li>
+	<% end %>
 </ul>
