@@ -15,7 +15,7 @@ class BinaryTree
 		end
 	end
 	
-	# Adds a new node to the tree with the _value_ indicated
+	# Adds a new node to the tree with the new_value indicated
   def add(new_value)
 
     if @root == nil
