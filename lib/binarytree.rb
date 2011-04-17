@@ -15,8 +15,30 @@ class BinaryTree
 		end
 	end
 	
+	def add(new_value)
+
+    if @root == nil
+      @root = Node.new(new_value)
+      @total_nodes = 1
+      return
+    end
+
+    current = @root
+    while(true)
+      child = if new_value >= current.value then :right else :left end
+      if current.send(child).nil?
+        current.send("#{child}=", Node.new(new_value))
+        break
+      else
+        current = current.send child
+      end
+    end
+
+    @total_nodes += 1
+  end
+  
 	# Adds a new node to the tree with the new_value indicated
-  def add(new_value)
+  def add2(new_value)
 
     if @root == nil
       @root = Node.new(new_value)
