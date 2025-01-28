@@ -3,18 +3,18 @@
 $: << File.expand_path(File.dirname(__FILE__) + "/lib")
 require "rubygems"
 require "sinatra"
-require "web_draw_binary_tree_controller"
+require "./web_draw_binary_tree_controller"
 
-TreeDataClass = Struct.new(:centerX, :offsetY, 
-  :canvas_width, :canvas_height, 
-  :count, :min_value, :max_value, :height, 
+TreeDataClass = Struct.new(:centerX, :offsetY,
+  :canvas_width, :canvas_height,
+  :count, :min_value, :max_value, :height,
   :warning_message, :draw_javascript, :list_nodes, :sort_message)
 
-  
+
 get '/' do
   erb :home
 end
- 
+
 
 get '/random/:howMany' do |howMany|
   controller = DrawTreeController.new()
@@ -55,8 +55,8 @@ def controller_to_data_class(controller)
   data.min_value = controller.tree.min.value
   data.max_value = controller.tree.max.value
   data.list_nodes = controller.node_list
-  data.sort_message = controller.sort_message 
-  return data 
+  data.sort_message = controller.sort_message
+  return data
 end
 
 # http://www.sinatrarb.com/faq.html#escape_html

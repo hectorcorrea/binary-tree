@@ -7,8 +7,16 @@ Class BinaryTreeDrawer implements the code to "draw" the binary tree. This class
 
 CAN I SEE THIS CODE IN ACTION?
 ------------------------------
-I am glad you asked! Point your browser to http://binarytree.heroku.com to see this code in action.
+Get the code and run it:
 
+```
+git clone https://github.com/hectorcorrea/binary-tree.git
+cd binary-tree
+gem install sinatra
+ruby web_server.rb
+```
+
+And then point your browser to http://127.0.0.1:4567
 
 STARTING WITH THE SOURCE CODE
 -----------------------------
@@ -21,23 +29,16 @@ STARTING WITH THE SOURCE CODE
 * The unit tests under tests are also another good place to start.
 
 
-A MORE COMPREHENSIVE EXAMPLE
-----------------------------
-The web site at http://binarytree.heroku.com is a more comprehensive sample of usage. This site used HTML 5's canvas element to actually draw the binary tree on a web page.
-
-The code for this web site is also on this git repository. Run web_server.rb to get it running on your local environment. You'll need Sinatra to run this web site on your box, though. 
-
-
 EVEN MORE INFORMATION
 ---------------------
-Check out this blog post for more details on how the binary tree, the binary tree drawer, and the demo web site work: http://hectorcorrea.com/Blog/Drawing-a-Binary-Tree-in-Ruby
+Check out this blog post for more details on how the binary tree, the binary tree drawer, and the demo web site work: https://hectorcorrea.com/blog/2011-04-11/drawing-a-binary-tree-in-ruby
 
 
 COMMENTS, THOUGHTS, SUGGESTIONS?
 --------------------------------
-This is my first Ruby program so very likely it does not follow Ruby's best practices or the Ruby way of doing things but it's a start. 
+This is my first Ruby program so very likely it does not follow Ruby's best practices or the Ruby way of doing things but it's a start.
 
 Feel free to comment and/or reach me if you have any questions, comments, or suggestions.
 
 Hector Correa
-hector@hectorcorrea.com 
+hector@hectorcorrea.com
